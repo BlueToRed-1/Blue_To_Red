@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lagerverwaltung</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f5;
+      color: #1f2937;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: #173f2a;
+      color: white;
+      padding: 25px 15px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 35px;
+      padding: 0 10px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: #dce9df;
+      text-align: left;
+      padding: 13px 12px;
+      margin-bottom: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #286342;
+      color: white;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-x: auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      font-size: 28px;
+    }
+
+    .user {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 22px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-title {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    /* Content */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .panel-header h2 {
+      font-size: 19px;
+    }
+
+    .btn {
+      border: none;
+      background: #286342;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #1f5034;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .green {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .yellow {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .red {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Warnungen */
+    .warning {
+      padding: 13px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #fff7ed;
+      border-left: 4px solid #f97316;
+    }
+
+    .warning strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1000px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        width: 190px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- Navigation -->
+  <aside class="sidebar">
+    <div class="logo"> Lagerverwaltung</div>
+
+    <nav class="nav">
+      <button class="active">🏠 Dashboard</button>
+      <button>📦 Lagerbestand</button>
+      <button>➕ Einlagerung</button>
+      <button>➖ Entnehmen</button>
+      <button>📋 Protokol</button>
+      <button>⚙️ Einstellungen</button>
+    </nav>
+  </aside>
+
+
+  <!-- Hauptbereich -->
+  <main class="main">
+
+    <div class="topbar">
+      <h1>Dashboard</h1>
+      <div class="user">👤 Mitarbeiter</div>
+    </div>
+
+
+    <!-- Kennzahlen -->
+    <section class="cards">
+
+      <div class="card">
+        <div class="card-title">Gesamtbestand</div>
+        <div class="card-value">6.020 kg</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Produkte</div>
+        <div class="card-value">24</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Einlagerungen heute</div>
+        <div class="card-value">12</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Auslagerungen heute</div>
+        <div class="card-value">7</div>
+      </div>
+
+    </section>
+
+
+    <!-- Tabellen + Warnungen -->
+    <section class="content-grid">
+
+      <div class="panel">
+
+        <div class="panel-header">
+          <h2>Aktueller Lagerbestand</h2>
+          <button class="btn">+ Einlagerung</button>
+        </div>
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Produkt</th>
+              <th>Menge</th>
+              <th>Lagerplatz</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>Weizen</td>
+              <td>4.500 kg</td>
+              <td>A-01</td>
+              <td>
+                <span class="status green">Gut</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Kartoffeln</td>
+              <td>1.200 kg</td>
+              <td>B-03</td>
+              <td>
+                <span class="status green">Gut</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Mais</td>
+              <td>280 kg</td>
+              <td>A-04</td>
+              <td>
+                <span class="status yellow">Niedrig</span>
+              </td>
+            </tr>
+
+            <tr>
+              <td>Dünger</td>
+              <td>40 kg</td>
+              <td>C-02</td>
+              <td>
+                <span class="status red">Kritisch</span>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- Warnungen -->
+      <div class="panel">
+
+        <div class="panel-header">
+          <h2>⚠️ Warnungen</h2>
+        </div>
+
+        <div class="warning">
+          <strong>Dünger</strong>
+          Nur noch 40 kg vorhanden.
+        </div>
+
+        <div class="warning">
+          <strong>Mais</strong>
+          Bestand liegt unter dem Mindestbestand.
+        </div>
+
+        <div class="warning">
+          <strong>Lieferung</strong>
+          2 Lieferungen werden heute erwartet.
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+</html>
